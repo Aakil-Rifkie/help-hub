@@ -7,6 +7,9 @@ import User from '../models/userModel.js'
 //POST /api/users
 //access Public
 const registerUser = asyncHandler(async (req, res) => {
+
+    console.log("Req Body:", req.body);
+
     const { fullname, email, password } = req.body
 
     if (!fullname || !email || !password){
@@ -46,8 +49,6 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('Invalid user data')
     }
 
-
-    res.json({message: "Register User"})
 })
 
 
@@ -60,6 +61,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({email})
     if (user && (await bcrypt.compare(password, user.password))){
         res.json({
+            token,
             _id: user.id,
             fullname: user.fullname,
             email: user.email,
@@ -70,7 +72,6 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new Error('Invalid credentials')
         }
 
-    res.json({message: "Login user"})
 })
 
 //Get user data

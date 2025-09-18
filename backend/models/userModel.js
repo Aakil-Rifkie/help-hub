@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema({
     registeredProjects: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'project',
-       } ,
+    },
     ],
 
     assignedTasks: [
@@ -38,10 +38,10 @@ const userSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'task',
         },
-    ],   
+    ],
 },
-{
-    timestamps: true,
-})
+    {
+        timestamps: true,
+    })
 
 export default mongoose.model('User', userSchema)
