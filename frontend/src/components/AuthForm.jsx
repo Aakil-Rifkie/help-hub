@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
 import FormInput from "./FormInput";
 
-export default function AuthForm({ isLogin, setIsLogin, formData, setFormData, onSubmit }) {
+export default function AuthForm({ isLogin, setIsLogin, formData, setFormData, onSubmit, fieldErrors = {}, globalError = "" }) {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleInputChange = (e) => {
@@ -11,6 +11,12 @@ export default function AuthForm({ isLogin, setIsLogin, formData, setFormData, o
 
     return (
         <div className="space-y-5 sm:space-y-6">
+            {globalError && (
+                <div className="text-red-500 text-sm text-center">
+                    {globalError}
+                </div>
+            )}
+
             {!isLogin && (
                 <FormInput
                     label="Full Name"
@@ -21,6 +27,7 @@ export default function AuthForm({ isLogin, setIsLogin, formData, setFormData, o
                     onChange={handleInputChange}
                     icon={<User className="h-5 w-5 text-gray-400" />}
                     placeholder="Enter your full name"
+                    error = {fieldErrors.fullname}
                 />
             )}
 
@@ -33,6 +40,7 @@ export default function AuthForm({ isLogin, setIsLogin, formData, setFormData, o
                 onChange={handleInputChange}
                 icon={<Mail className="h-5 w-5 text-gray-400" />}
                 placeholder="Enter your email"
+                error = {fieldErrors.email}
             />
 
             <FormInput
@@ -44,6 +52,7 @@ export default function AuthForm({ isLogin, setIsLogin, formData, setFormData, o
                 onChange={handleInputChange}
                 icon={<Lock className="h-5 w-5 text-gray-400" />}
                 placeholder="Enter your password"
+                error = {fieldErrors.password}
                 extraButton={
                     <button
                         type="button"
@@ -64,7 +73,7 @@ export default function AuthForm({ isLogin, setIsLogin, formData, setFormData, o
                     onChange={handleInputChange}
                     icon={<Lock className="h-5 w-5 text-gray-400" />}
                     placeholder="Confirm your password"
-
+                    error = {fieldErrors.confirmPassword}
                 />
             )}
 

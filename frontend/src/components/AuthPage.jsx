@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     fullname: "",
@@ -18,30 +19,26 @@ export default function AuthPage() {
   const navigate = useNavigate();
 
   const validateForm = () => {
-    if (!formData.email || !formData.password) {
-      setError('Email and passwords are required');
-      return false;
-    }
+    const errors = {};
+
+    if (!formData.email) errors.email = "Email is required";
+    if (!formData.password) errors.password = "Password is required";
 
     if (!isLogin) {
-      if (!formData.fullname) {
-        setError('Full name is required');
-        return false;
-      }
+      if (!formData.fullname) errors.fullname = "Full name is required";
 
       if (formData.password !== formData.confirmPassword) {
-        setError('Passwords do not match');
-        return (false);
+        errors.confirmPassword = "Passwords do not match";
       }
 
-      if (formData.password.length < 6) {
-        setError('Password must be atleast 6 characters');
-        return false;
+      if (formData.password && formData.password.length < 6) {
+        errors.password = "Password must be at least 6 characters";
       }
     }
 
-    return true;
-  }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,13 +62,13 @@ export default function AuthPage() {
           fullname: response.data.fullname,
           email: response.data.email,
         };
-        
+
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
 
         navigate("/home");
-      } 
+      }
       else {
         const response = await axios.post("http://localhost:5000/api/users", {
           fullname: formData.fullname,
@@ -128,6 +125,8 @@ export default function AuthPage() {
             formData={formData}
             setFormData={setFormData}
             onSubmit={handleSubmit}
+            fieldErrors={fieldErrors}
+            globalError={error}
           />
         </div>
       </div>
