@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Heart } from "lucide-react";
-import AuthForm from "./AuthForm";
-import AuthWelcome from "./AuthWelcome";
+import AuthForm from "../components/AuthForm";
+import AuthWelcome from "../components/AuthWelcome";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
