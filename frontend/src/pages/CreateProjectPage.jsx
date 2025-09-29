@@ -22,7 +22,7 @@ export default function CreateProjectPage() {
 
   const handleSubmit = async () => {
   let errors = {};
-  if (!formData.title) errors.title = "Project title is required.";
+  if (!formData.title) errors.title = "Projecta title is required.";
   if (!formData.description) errors.description = "Description is required.";
   if (!formData.dueDate) errors.dueDate = "Due date is required.";
 

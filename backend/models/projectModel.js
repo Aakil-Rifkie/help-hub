@@ -13,7 +13,8 @@ const projectSchema = new mongoose.Schema({
     },
 
     endDate: {
-        Date,
+        type: Date,
+        required: true,
     },
     
     tasks: [

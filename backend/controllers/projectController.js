@@ -36,8 +36,13 @@ const getProjects = asyncHandler(async (req, res) => {
     const projects = await Project.find()
         .populate("volunteers", "fullname email")
         .populate("tasks");
-
-    res.status(200).json(projects);
+    const userId = req.user ? req.user._id.toString() :
+        null; const projectsWithJoined = projects.map(project =>
+        ({
+            ...project.toObject(), joined: userId ?
+                project.volunteers.some(v => v._id.toString() === userId) : false
+        }));
+     res.status(200).json(projectsWithJoined); 
 });
 
 //Get a single project
@@ -59,7 +64,7 @@ const getProjectById = asyncHandler(async (req, res) => {
 
 
 //Route when volunteer joins a project
-//GET /api/projects/:id/join
+//POST /api/projects/:id/join
 //For volunteers
 
 const joinProject = asyncHandler(async (req, res) => {

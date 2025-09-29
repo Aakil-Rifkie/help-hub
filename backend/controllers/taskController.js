@@ -74,6 +74,7 @@ const getTaskById = asyncHandler(async (req, res) => {
 //POST /api/projects/:projectId/tasks/:taskId
 //access admin
 
+// I NEED TO FIX THIS THERE IS DATA ISSUES AND FUNCTIONALITY FLOW PROBLEMS (NOTE!)
 const assignVolunteersToTask = asyncHandler(async (req, res) => {
     const { projectId, taskId } = req.params
     const { volunteerIds } = req.body

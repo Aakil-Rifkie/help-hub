@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import Project from '../models/projectModel.js'
 
 //Register a new user
 //POST /api/users
@@ -90,10 +91,30 @@ const getMe = asyncHandler(async (req, res) => {
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '30d',
-    })
+    })  
 }
+
+
+//Get user task and projects for dashboard
+//GET /api/users/my-projects
+//access Private
+const getUserProjectsWithTasks = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const projects = await Project.find({ volunteers: userId })
+    .populate({
+      path: "tasks",
+      match: { assignedVolunteers: userId },
+      select: "title description deadline isCompleted",
+    })
+    .select("title description endDate location tasks");
+
+  res.json(projects);
+});
+
 export {
     registerUser,
     loginUser,
     getMe,
+    getUserProjectsWithTasks,
 }
