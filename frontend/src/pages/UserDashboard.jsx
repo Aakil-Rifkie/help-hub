@@ -20,7 +20,7 @@ export default function UserDashboardPage() {
     };
     fetchProjects();
   }, []);
-  
+
   return (
     <div className="min-h-screen bg-gray-100">
       <NavBar />
@@ -33,6 +33,7 @@ export default function UserDashboardPage() {
         ) : (
           <p className="text-gray-500 text-center">No projects assigned yet</p>
         )}
+
       </div>
     </div>
   );

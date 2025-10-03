@@ -1,17 +1,11 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import PageHeader from "../components/PageHeader";
 import TaskForm from "../components/TaskForm";
 
-
-
-export default function CreateTaskPage() {
-
-  const { projectId } = useParams();
+export default function TaskFormModal({ isOpen, onClose, projectId, onTaskCreated }) {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    dueDate: ''
+    title: "",
+    description: "",
+    dueDate: ""
   });
 
   const [fieldErrors, setFieldErrors] = useState({});
@@ -19,7 +13,7 @@ export default function CreateTaskPage() {
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -58,28 +52,37 @@ export default function CreateTaskPage() {
 
         alert("Task created successfully!");
         setFormData({ title: "", description: "", dueDate: "" });
+
+        if (onTaskCreated) onTaskCreated(data);
+        onClose();
       } catch (err) {
         console.error(err.message);
-        alert("Error" + err.message);
+        alert("Error: " + err.message);
       }
     }
   };
 
-  const handleBackToDashboard = () => {
-      console.log('Navigating back to dashboard');
-    };
+  if (!isOpen) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="py-12 px-6">
-        <div className="max-w-4xl mx-auto">
-          <PageHeader />
-          <TaskForm
-            formData={formData}
-            onInputChange={handleInputChange}
-            onSubmit={handleSubmit}
-            fieldErrors={fieldErrors}
-          />
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 px-4">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-[90%] md:w-[70%] lg:w-[50%] max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-semibold mb-4">Create Task</h2>
+
+        <TaskForm
+          formData={formData}
+          onInputChange={handleInputChange}
+          onSubmit={handleSubmit}
+          fieldErrors={fieldErrors}
+        />
+
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>

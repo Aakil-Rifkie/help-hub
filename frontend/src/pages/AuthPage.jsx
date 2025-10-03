@@ -61,13 +61,17 @@ export default function AuthPage() {
           id: response.data._id,
           fullname: response.data.fullname,
           email: response.data.email,
+          role: response.data.role,
         };
 
         localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("role", user.role);
 
-
-        navigate("/home");
+        if (user.role === "admin") {
+          navigate("/view-admin-dashboard");
+        } else {
+          navigate("/view-user-dashboard");
+        }
       }
       else {
         const response = await axios.post("http://localhost:5000/api/users", {
