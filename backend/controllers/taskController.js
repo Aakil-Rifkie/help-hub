@@ -74,63 +74,52 @@ const getTaskById = asyncHandler(async (req, res) => {
 //POST /api/projects/:projectId/tasks/:taskId
 //access admin
 
-// I NEED TO FIX THIS THERE IS DATA ISSUES AND FUNCTIONALITY FLOW PROBLEMS (NOTE!)
 const assignVolunteersToTask = asyncHandler(async (req, res) => {
-    const { projectId, taskId } = req.params
-    const { volunteerIds } = req.body
+    const { projectId, taskId } = req.params;
+    const { volunteerIds } = req.body;
 
-    const task = await Task.findById(taskId)
+    const task = await Task.findById(taskId);
     if (!task) {
-        res.status(404)
-        throw new Error('Task not found')
+        res.status(404);
+        throw new Error("Task not found");
     }
 
-    const project = await Project.findById(projectId)
+    const project = await Project.findById(projectId);
     if (!project) {
-        res.status(404)
-        throw new Error('Project not found')
+        res.status(404);
+        throw new Error("Project not found");
     }
 
-    if (!project.volunteers) project.volunteers = []
 
-    const toAddtoProject = []
-    for (const vid of volunteerIds){
-        if (!project.volunteers.map(String).includes(String(vid))) {
-            toAddtoProject.push(vid)
-        }
+    const validVolunteers = volunteerIds.filter((vid) =>
+        project.volunteers.map(String).includes(String(vid))
+    );
+
+    if (!validVolunteers.length) {
+        res.status(400);
+        throw new Error("No valid volunteers from this project");
     }
 
-    if (toAddtoProject.length){
-        project.volunteers.push(...toAddtoProject)
-        await project.save()
-
-        await User.updateMany(
-            {_id: {$in: toAddtoProject}},
-            {$addToSet: {registeredProjects: project._id}}
-        )
-        
-    }
-
-    const uniqueToAdd = volunteerIds.filter(
+    const uniqueToAdd = validVolunteers.filter(
         (id) => !task.assignedVolunteers.map(String).includes(String(id))
-    )
+    );
 
-    if (uniqueToAdd.length){
-        task.assignedVolunteers.push(...uniqueToAdd)
-        await task.save()
+    if (uniqueToAdd.length) {
+        task.assignedVolunteers.push(...uniqueToAdd);
+        await task.save();
     }
 
     await User.updateMany(
-        {_id: {$in: volunteerIds}},
-        {$addToSet: {assignedTasks: task._id}}
-    )
+        { _id: { $in: uniqueToAdd } },
+        { $addToSet: { assignedTasks: task._id } }
+    );
 
     const updated = await Task.findById(taskId).populate(
-        'assignedVolunteers',
-        'fullname email'
-    )
+        "assignedVolunteers",
+        "fullname email"
+    );
 
-    res.status(200).json({message: 'Volunteers assigned', task: updated})
+    res.status(200).json({ message: "Volunteers assigned", task: updated });
 })
 
 export {

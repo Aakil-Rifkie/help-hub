@@ -136,7 +136,7 @@ export default function AuthPage() {
       </div>
 
 
-      <div className="hidden md:flex w-full md:w-1/2 bg-gradient-to-br from-blue-600 to-purple-700 items-center justify-center">
+      <div className="hidden md:flex w-full md:w-1/2 bg-blue-700 items-center justify-center">
         <AuthWelcome />
       </div>
     </div>

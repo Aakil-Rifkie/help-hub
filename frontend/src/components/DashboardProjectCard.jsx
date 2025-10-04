@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Eye, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import TaskItem from "./TaskItem";
 
-const ProjectCard = ({ project, onCreateTask, onViewMore }) => {
+const ProjectCard = ({ project, onCreateTask, onAssign }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -13,7 +13,11 @@ const ProjectCard = ({ project, onCreateTask, onViewMore }) => {
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-gray-600 hover:text-gray-900"
           >
-            {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+            {isExpanded ? (
+              <ChevronUp className="h-5 w-5" />
+            ) : (
+              <ChevronDown className="h-5 w-5" />
+            )}
           </button>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
@@ -29,12 +33,12 @@ const ProjectCard = ({ project, onCreateTask, onViewMore }) => {
             <Plus className="h-4 w-4" />
             <span>Create Task</span>
           </button>
+
           <button
-            onClick={() => onViewMore(project._id)}
-            className="flex items-center space-x-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            onClick={() => onAssign(project._id)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
           >
-            <Eye className="h-4 w-4" />
-            <span>View More</span>
+            Assign Volunteers
           </button>
         </div>
       </div>
